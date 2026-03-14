@@ -1,6 +1,9 @@
 from pygame import *
 from image import walk, fon, fon1, zombie1, icon, myfount, piv_pav, fon_sounds
-from config_game import Player, Zombie, Strilba
+from config_game import Player, Zombie, Strilba, Level
+
+
+
 
 clock = time.Clock()
 init() 
@@ -37,6 +40,8 @@ restart_rect = text_restart.get_rect(topleft=(245, 300))
 text_start = myfount.render('start', False, 25)
 start_rect = text_restart.get_rect(topleft=(245, 300))
 
+level = Level()
+
 def pipipipapapa(e):  
             global pulki, shoot, last_shot_time  
             for i in range(len(pivs_pavs) - 1, -1, -1):
@@ -61,10 +66,19 @@ e_presed = False
 game_started = False
 ranning = True
 while ranning:
-    dlyafonu = (5000 // 736) + 2
-    for i in range(dlyafonu):
-        sckrin.blit(fon, (fon_x + i * 736, 0))
+    # dlyafonu = (5000 // 736) + 2
+    # for i in range(dlyafonu):
+    #     sckrin.blit(fon, (fon_x + i * 736, 0))
 
+    dlyafonu = (5000 // 736) + 2
+    if level.in_house:
+        sckrin.blit(fon1, (0, 0))          # фон хати
+        # time.set_timer(zombie_timer, 0)    # зупиняємо спавн зомбі
+    else:
+        for i in range(dlyafonu):
+            sckrin.blit(fon, (fon_x + i * 736, 0))
+        # time.set_timer(zombie_timer, 5000)
+        
     if not game_started:
         sckrin.fill((255, 255, 255))
         text_start = myfount.render('START', True, (0, 0, 0))
@@ -73,6 +87,8 @@ while ranning:
         get_mouse = mouse.get_pos()
         if start_rect.collidepoint(get_mouse) and mouse.get_pressed()[0]:
             game_started = True
+            zombie_list_in_game.clear()
+            pivs_pavs.clear()
      
     elif game_started and game_play:
         keys = key.get_pressed()
@@ -114,6 +130,11 @@ while ranning:
                 player_anim_count = 0
         hodba()
         playerrr.update()
+
+        if level.update(fon_x):
+            zombie_list_in_game.clear()
+            pivs_pavs.clear()
+            pulki = 15
 
         text_pulki = myfount.render(f'Bullets: {pulki}', True, (255, 255, 255))
         sckrin.blit(text_pulki, (2, 2))

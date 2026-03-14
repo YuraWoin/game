@@ -70,6 +70,19 @@ class Strilba:
     def collides_with(self, other_rect):
         return self.hitbox.colliderect(other_rect)
 
+
+class Level:
+    def __init__(self):
+        self.current = 1
+        self.distance = 0        # скільки пройшов
+        self.in_house = False    # чи в хаті
+
+    def update(self, fon_x):
+        self.distance = abs(fon_x)
+        if self.distance >= 5000 and not self.in_house:
+            self.in_house = True
+            return True          # сигнал що зайшли в хату
+        return False
 #, sckrin, zombie_image
 
  
